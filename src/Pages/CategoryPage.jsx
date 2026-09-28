@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../Components/Navbar";
 import Footer from "../Components/Footer";
@@ -18,7 +19,7 @@ const { data, isLoading, isError } = useQuery({
   queryKey: ["categoryProducts", categorySlug, page],
   queryFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/customer/categories/products/${categorySlug}?page=${page}`
+      `${API_URL}/api/customer/categories/products/${categorySlug}?page=${page}`
     );
 
     const result = await response.json();
@@ -122,7 +123,7 @@ return (
       >
         <div className="flex h-48 w-full items-center justify-center overflow-hidden bg-white sm:h-44 md:h-43">
           <img
-            src={`http://localhost:4000${product.images?.[0]?.imagePath}`}
+            src={`${API_URL}${product.images?.[0]?.imagePath}`}
             alt={product.name}
             className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
           />

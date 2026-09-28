@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -31,7 +32,7 @@ const Orders = () => {
   queryKey: ["vendorOrders"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/orders",
+      `${API_URL}/api/vendor/orders`,
       {
         credentials: "include",
       }

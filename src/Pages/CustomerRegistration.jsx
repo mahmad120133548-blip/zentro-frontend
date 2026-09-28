@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +22,7 @@ const navigate = useNavigate();
 const customerRegisterMutation = useMutation({
   mutationFn: async (customerData) => {
     const response = await fetch(
-      "http://localhost:4000/api/auth/customer/register",
+      `${API_URL}/api/auth/customer/register`,
       {
         method: "POST",
         headers: {

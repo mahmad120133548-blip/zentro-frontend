@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState } from "react";
 import {User,Shield,Settings as SettingsIcon,Save,} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -28,7 +29,7 @@ const {data: profileData,isLoading,isError} = useQuery({
   queryKey: ["adminProfile"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/profile",
+      `${API_URL}/api/admin/profile`,
       {
         credentials: "include",
       }
@@ -116,7 +117,7 @@ const ProfileSettings = ({profileData}) => {
   const updateMutation = useMutation({
   mutationFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/profile",
+      `${API_URL}/api/admin/profile`,
       {
         method: "PATCH",
         credentials: "include",
@@ -241,7 +242,7 @@ const SecuritySettings = () => {
   const updatePasswordMutation = useMutation({
   mutationFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/change-password",
+      `${API_URL}/api/admin/change-password`,
       {
         method: "PATCH",
         credentials: "include",

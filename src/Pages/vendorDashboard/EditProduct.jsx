@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState,useEffect } from "react";
 import {
   ArrowLeft,
@@ -30,7 +31,7 @@ const { data: productData, isLoading: productLoading,isError:productError,error:
   queryKey: ["vendorProduct", productId],
   queryFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products/${productId}`,
+      `${API_URL}/api/vendor/products/${productId}`,
       {
         credentials: "include",
       }
@@ -51,7 +52,7 @@ const { data: categories = [] } = useQuery({
   queryKey: ["categories"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/categories"
+      `${API_URL}/api/categories`
     );
 
     const data = await response.json();
@@ -76,7 +77,7 @@ useEffect(() => {
    setImages(
   (productData.images || []).map((image) => ({
       id: image.id,
-      preview: `http://localhost:4000${image.imagePath}`,
+      preview: `${API_URL}${image.imagePath}`,
       existing: true,
     }))
   );
@@ -133,7 +134,7 @@ const handleDragEnd = () => {
   const updateProductMutation = useMutation({
   mutationFn: async (formData) => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products/${productId}`,
+      `${API_URL}/api/vendor/products/${productId}`,
       {
         method: "PUT",
         credentials: "include",

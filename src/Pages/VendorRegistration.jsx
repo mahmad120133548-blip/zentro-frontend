@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
@@ -25,7 +26,7 @@ function VendorRegistration() {
 const { data: categories = [], isLoading: categoriesLoading,} = useQuery({
   queryKey: ["categories"],
   queryFn: async () => {
-    const response = await fetch("http://localhost:4000/api/categories");
+    const response = await fetch(`${API_URL}/api/categories`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch categories");
@@ -40,7 +41,7 @@ const { data: categories = [], isLoading: categoriesLoading,} = useQuery({
 const vendorRegisterMutation = useMutation({
   mutationFn: async (vendorData) => {
     const response = await fetch(
-      "http://localhost:4000/api/auth/vendor-register",
+      `${API_URL}/api/auth/vendor-register`,
       {
         method: "POST",
         headers: {

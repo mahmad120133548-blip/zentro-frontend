@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import {
   ArrowLeft,
   Package,
@@ -22,7 +23,7 @@ const SeeProduct = () => {
   queryKey: ["vendorProduct", productId],
   queryFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products/${productId}`,
+      `${API_URL}/api/vendor/products/${productId}`,
       {
         credentials: "include",
       }
@@ -142,7 +143,7 @@ const isInStock = product.stockQuantity > product.minimumStock;
   {product.images?.length > 0 ? (
     <>
       <img
-        src={`http://localhost:4000${product.images[selectedImage]?.imagePath}`}
+        src={`${API_URL}${product.images[selectedImage]?.imagePath}`}
         alt={`${product.name} ${selectedImage + 1}`}
         className="h-105 w-full object-contain bg-white sm:h-125"
       />
@@ -189,7 +190,7 @@ const isInStock = product.stockQuantity > product.minimumStock;
           }`}
         >
           <img
-            src={`http://localhost:4000${image.imagePath}`}
+            src={`${API_URL}${image.imagePath}`}
             alt={`${product.name} ${index + 1}`}
             className="h-full w-full object-cover"
           />

@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -5,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/admin/dashboard", {
+    fetch(`${API_URL}/api/admin/dashboard`, {
       credentials: "include",
     })
       .then((response) => {

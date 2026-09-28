@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -21,7 +22,7 @@ const AddProduct = () => {
   const { data: categories = [], isLoading: categoriesLoading,} = useQuery({
     queryKey: ["categories"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:4000/api/categories");
+      const response = await fetch(`${API_URL}/api/categories`);
   
       if (!response.ok) {
         throw new Error("Failed to fetch categories");
@@ -36,7 +37,7 @@ const AddProduct = () => {
   const createProductMutation = useMutation({
   mutationFn: async (formData) => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/products",
+      `${API_URL}/api/vendor/products`,
       {
         method: "POST",
         credentials: "include",

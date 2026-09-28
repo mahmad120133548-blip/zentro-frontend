@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { Link, useNavigate } from "react-router-dom";
 import {
   Store,
@@ -26,7 +27,7 @@ const Dashboard = () => {
   queryKey: ["adminDashboard"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/dashboard",
+      `${API_URL}/api/admin/dashboard`,
       {
         credentials: "include",
       }
@@ -48,7 +49,7 @@ const {
   queryKey: ["adminNotifications"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/notifications",
+      `${API_URL}/api/admin/notifications`,
       {
         credentials: "include",
       }
@@ -88,7 +89,7 @@ const sortedNotifications = [...notifications].sort((a, b) => {
   try {
     if (!notification.isRead) {
       const response = await fetch(
-        `http://localhost:4000/api/admin/notifications/${notification.id}/read`,
+        `${API_URL}/api/admin/notifications/${notification.id}/read`,
         {
           method: "PATCH",
           credentials: "include",
@@ -121,7 +122,7 @@ const{data:vendorData,isLoading:vendorsLoading,isError:vendorsError}=useQuery({
   queryKey:["adminRecentVendors"],
   queryFn:async()=>{
     const response=await fetch(
-      "http://localhost:4000/api/admin/recent-vendors",
+      `${API_URL}/api/admin/recent-vendors`,
       {
         credentials:"include",
       }

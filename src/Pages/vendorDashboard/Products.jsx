@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import {
   Plus,
   Search,
@@ -93,7 +94,7 @@ const {data,isLoading,isError,} = useQuery({
     }
 
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products?${params.toString()}`,
+      `${API_URL}/api/vendor/products?${params.toString()}`,
       {
         credentials: "include",
       }
@@ -121,7 +122,7 @@ useEffect(() => {
 const restockMutation = useMutation({
   mutationFn: async ({ productId, quantity }) => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products/restock/${productId}`,
+      `${API_URL}/api/vendor/products/restock/${productId}`,
       {
         method: "PATCH",
         credentials: "include",
@@ -163,7 +164,7 @@ const restockMutation = useMutation({
 const deleteMutation = useMutation({
   mutationFn: async (productId) => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/products/delete/${productId}`,
+      `${API_URL}/api/vendor/products/delete/${productId}`,
       {
         method: "DELETE",
         credentials: "include",

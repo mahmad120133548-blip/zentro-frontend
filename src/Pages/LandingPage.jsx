@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -59,7 +60,7 @@ const HomeSections = () => {
     queryKey: ["homeProducts"],
     queryFn: async () => {
       const response = await fetch(
-        "http://localhost:4000/api/customer/home"
+        `${API_URL}/api/customer/home`
       );
 
       const result = await response.json();
@@ -151,7 +152,7 @@ const HomeSections = () => {
       >
         <div className="relative flex h-46 items-center justify-center bg-white sm:h-40">
           <img
-            src={`http://localhost:4000${product.images?.[0]?.imagePath}`}
+            src={`${API_URL}${product.images?.[0]?.imagePath}`}
             className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
           />
         </div>

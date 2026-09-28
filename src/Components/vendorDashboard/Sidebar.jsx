@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import {
   BoxIcon,
   LayoutDashboard,
@@ -23,7 +24,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
   const { updateAuthState } = useAuth();
 
   const handleLogout = async () => {
-  const response = await fetch("http://localhost:4000/api/auth/logout", {
+  const response = await fetch(`${API_URL}/api/auth/logout`, {
     method: "POST",
     credentials: "include",
   });

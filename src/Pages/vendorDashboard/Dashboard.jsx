@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { Link, useNavigate } from "react-router-dom";
 import {
   Package,
@@ -27,7 +28,7 @@ const VendorDashboard = () => {
     queryKey: ["vendorDashboardStats"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/dashboard/stats",
+      `${API_URL}/api/vendor/dashboard/stats`,
       {
         credentials: "include",
       }
@@ -46,7 +47,7 @@ const VendorDashboard = () => {
   queryKey: ["vendorRecentOrders"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/orders",
+      `${API_URL}/api/vendor/orders`,
       {
         credentials: "include",
       }
@@ -67,7 +68,7 @@ const { data: storeStatusData } = useQuery({
   queryKey: ["vendorStoreStatus"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/store-status",
+      `${API_URL}/api/vendor/store-status`,
       {
         credentials: "include",
       }
@@ -89,7 +90,7 @@ const { data: notificationsData } = useQuery({
   queryKey: ["vendorNotifications"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/notifications",
+      `${API_URL}/api/vendor/notifications`,
       {
         credentials: "include",
       }
@@ -114,7 +115,7 @@ const handleNotificationClick = async (notification) => {
   try {
     if (!notification.isRead) {
       const response = await fetch(
-        `http://localhost:4000/api/vendor/notifications/${notification.id}/read`,
+        `${API_URL}/api/vendor/notifications/${notification.id}/read`,
         {
           method: "PATCH",
           credentials: "include",

@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { Search, Clock3 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
@@ -15,7 +16,7 @@ const { data: pendingVendors = [], isLoading, isError } = useQuery({
   queryKey: ["adminPendingApprovals"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/pending-approvals",
+      `${API_URL}/api/admin/pending-approvals`,
       {
         credentials: "include",
       }
@@ -52,7 +53,7 @@ const filteredVendors = pendingVendors.filter((vendor) =>
 const approveMutation=useMutation({
   mutationFn:async(vendorId)=>{
     const response=await fetch(
-      `http://localhost:4000/api/admin/vendors/approve/${vendorId}`,
+      `${API_URL}/api/admin/vendors/approve/${vendorId}`,
       {
         method:"PATCH",
         credentials:"include"
@@ -88,7 +89,7 @@ const rejectMutation=useMutation({
   mutationFn:async(vendorId)=>{
 
     const response=await fetch(
-      `http://localhost:4000/api/admin/vendors/reject/${vendorId}`,
+      `${API_URL}/api/admin/vendors/reject/${vendorId}`,
       {
         method:"PATCH",
         credentials:"include",

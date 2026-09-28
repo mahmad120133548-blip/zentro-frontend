@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -17,7 +18,7 @@ const { data: vendors = [], isLoading, isError } = useQuery({
   queryKey: ["adminVendors"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/admin/vendors",
+      `${API_URL}/api/admin/vendors`,
       {
         credentials: "include",
       }

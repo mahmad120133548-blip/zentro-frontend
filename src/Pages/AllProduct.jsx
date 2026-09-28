@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link } from "react-router-dom";
 
 import Navbar from "../Components/Navbar";
@@ -17,7 +18,7 @@ function AllProducts() {
     queryKey: ["customerProducts", page],
     queryFn: async () => {
       const response = await fetch(
-        `http://localhost:4000/api/customer/products?page=${page}`
+        `${API_URL}/api/customer/products?page=${page}`
       );
 
       const result = await response.json();
@@ -72,7 +73,7 @@ function AllProducts() {
               >
                 <div className="group flex h-48 w-full items-center justify-center bg-white sm:h-44 md:h-48">
                   <img
-                      src={`http://localhost:4000${product.images?.[0]?.imagePath}`}
+                      src={`${API_URL}${product.images?.[0]?.imagePath}`}
                     className="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"  />
                 </div>
 

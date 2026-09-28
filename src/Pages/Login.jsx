@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -37,7 +38,7 @@ const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
   mutationFn: async ({ email, password }) => {
-    const response = await fetch("http://localhost:4000/api/auth/login", {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

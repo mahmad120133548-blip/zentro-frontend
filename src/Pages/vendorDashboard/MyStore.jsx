@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { useState,useEffect } from "react";
 import {
   ArrowLeft,
@@ -27,7 +28,7 @@ const { data: storeStatusData, isLoading: isStoreStatusLoading } = useQuery({
   queryKey: ["vendorStoreStatus"],
   queryFn: async () => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/store-status",
+      `${API_URL}/api/vendor/store-status`,
       {
         credentials: "include",
       }
@@ -46,7 +47,7 @@ const { data: storeStatusData, isLoading: isStoreStatusLoading } = useQuery({
 const updateStoreStatusMutation = useMutation({
   mutationFn: async (storeStatus) => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/store-status",
+      `${API_URL}/api/vendor/store-status`,
       {
         method: "PATCH",
         headers: {
@@ -83,7 +84,7 @@ const { data: storeInformationData, isLoading: isStoreInformationLoading } =
     queryKey: ["vendorStoreInformation"],
     queryFn: async () => {
       const response = await fetch(
-        "http://localhost:4000/api/vendor/store-information",
+        `${API_URL}/api/vendor/store-information`,
         {
           credentials: "include",
         }
@@ -104,7 +105,7 @@ const { data: storeInformationData, isLoading: isStoreInformationLoading } =
   const updateStoreInformationMutation = useMutation({
   mutationFn: async (businessName) => {
     const response = await fetch(
-      "http://localhost:4000/api/vendor/store-information",
+      `${API_URL}/api/vendor/store-information`,
       {
         method: "PATCH",
         headers: {

@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import Navbar from "../Components/Navbar";
 import { useState } from "react";
 import { useContext } from "react";
@@ -17,7 +18,7 @@ const [showSuccess, setShowSuccess] = useState(false);
   const placeOrderMutation = useMutation({
   mutationFn: async (orderData) => {
     const response = await fetch(
-      "http://localhost:4000/api/customer/orders",
+      `${API_URL}/api/customer/orders`,
       {
         method: "POST",
         headers: {
@@ -263,7 +264,7 @@ const [showSuccess, setShowSuccess] = useState(false);
                          <img
   src={
     product.image
-      ? `http://localhost:4000${product.image}`
+      ? `${API_URL}${product.image}`
       : "https://placehold.co/500x400/E9EEF2/0B1F33?text=Product"
   }
 

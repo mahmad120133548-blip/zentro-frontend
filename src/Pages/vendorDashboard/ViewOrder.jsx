@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import {
   ArrowLeft,
   Package,
@@ -28,7 +29,7 @@ const { data: order, isLoading,isError} = useQuery({
   queryKey: ["vendorOrder", orderId],
   queryFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/orders/${orderId}`,
+      `${API_URL}/api/vendor/orders/${orderId}`,
       {
         credentials: "include",
       }
@@ -47,7 +48,7 @@ const { data: order, isLoading,isError} = useQuery({
 const approveMutation = useMutation({
   mutationFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/orders/${orderId}/approve`,
+      `${API_URL}/api/vendor/orders/${orderId}/approve`,
       {
         method: "PATCH",
         credentials: "include",
@@ -87,7 +88,7 @@ const handleApprove = () => {
 const rejectMutation = useMutation({
   mutationFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/vendor/orders/${orderId}/reject`,
+      `${API_URL}/api/vendor/orders/${orderId}/reject`,
       {
         method: "PATCH",
         credentials: "include",

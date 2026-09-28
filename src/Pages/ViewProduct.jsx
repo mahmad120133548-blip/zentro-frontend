@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link,useParams,useLocation,useNavigate } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 import { useState, useContext,useEffect } from "react";
@@ -22,7 +23,7 @@ const { data, isLoading, isError } = useQuery({
   queryKey: ["customerProduct", productId],
   queryFn: async () => {
     const response = await fetch(
-      `http://localhost:4000/api/customer/products/${productId}`
+      `${API_URL}/api/customer/products/${productId}`
     );
 
     const result = await response.json();
@@ -140,7 +141,7 @@ return (
           <div className="min-w-0">
             <div className="relative overflow-hidden rounded-2xl bg-[#F4F7FA]">
   <img
-    src={`http://localhost:4000${product.images[selectedImage]?.imagePath}`}
+    src={`${API_URL}${product.images[selectedImage]?.imagePath}`}
     alt={product.name}
     className="h-130.75 w-full object-contain"
   />
@@ -178,7 +179,7 @@ return (
                   }`}
                 >
                   <img
-                    src={`http://localhost:4000${image.imagePath}`}
+                    src={`${API_URL}${image.imagePath}`}
                     alt={`${product.name} ${index + 1}`}
                     className="h-full w-full object-cover"
                   />

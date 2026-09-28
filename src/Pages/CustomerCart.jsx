@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2,X,ShoppingCart } from "lucide-react";
 import { useState,useEffect,useContext } from "react";
@@ -27,7 +28,7 @@ useEffect(() => {
 const validateCartMutation = useMutation({
   mutationFn: async (items) => {
     const response = await fetch(
-      "http://localhost:4000/api/customer/cart/validate",
+      `${API_URL}/api/customer/cart/validate`,
       {
         method: "POST",
         headers: {
@@ -215,7 +216,7 @@ if (!authLoading && !user) {
 
                       <div className="h-28 w-28 shrink-0 overflow-hidden rounded-xl bg-[#F4F7FA]">
                         <img 
-                          src={item.image? `http://localhost:4000${item.image}` : "https://placehold.co/500x400/E9EEF2/0B1F33?text=Product"
+                          src={item.image? `${API_URL}${item.image}` : "https://placehold.co/500x400/E9EEF2/0B1F33?text=Product"
 }
                           className="h-full w-full object-contain"/>
                       </div>
