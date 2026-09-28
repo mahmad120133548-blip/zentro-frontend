@@ -13,111 +13,42 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "../../Context/authContext";
-import {useQuery,useQueryClient} from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import Sidebar from "../../Components/vendorDashboard/Sidebar";
 
 const VendorDashboard = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  
 
   const [showNotifications, setShowNotifications] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const{data:statsData,isLoading}=useQuery({
+  const { data: statsData, isLoading } = useQuery({
     queryKey: ["vendorDashboardStats"],
-  queryFn: async () => {
-    const response = await fetch(
-      `${API_URL}/api/vendor/dashboard/stats`,
-      {
-        credentials: "include",
+    queryFn: async () => {
+      const response = await fetch(
+        `${API_URL}/api/vendor/dashboard/stats`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to fetch dashboard statistics");
       }
-    );
 
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.message || "Failed to fetch dashboard statistics");
-    }
-
-    return response.json();
-  },
-  })
+      return response.json();
+    },
+  });
 
   const { data: recentOrdersData } = useQuery({
-  queryKey: ["vendorRecentOrders"],
-  queryFn: async () => {
-    const response = await fetch(
-      `${API_URL}/api/vendor/orders`,
-      {
-        credentials: "include",
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to fetch recent orders");
-    }
-
-    return data.orders;
-  },
-});
-const recentOrders = recentOrdersData?.slice(0, 4) || [];
-
-const { data: storeStatusData } = useQuery({
-  queryKey: ["vendorStoreStatus"],
-  queryFn: async () => {
-    const response = await fetch(
-      `${API_URL}/api/vendor/store-status`,
-      {
-        credentials: "include",
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to fetch store status");
-    }
-
-    return data;
-  },
-});
-
-const storeStatus = storeStatusData?.storeStatus;
-
-const { data: notificationsData } = useQuery({
-  queryKey: ["vendorNotifications"],
-  queryFn: async () => {
-    const response = await fetch(
-      `${API_URL}/api/vendor/notifications`,
-      {
-        credentials: "include",
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Failed to fetch notifications");
-    }
-
-    return data;
-  },
-});
-
-const notifications = notificationsData?.notifications || [];
-const unreadCount = notificationsData?.unreadCount || 0;
-
-const queryClient = useQueryClient();
-
-const handleNotificationClick = async (notification) => {
-  try {
-    if (!notification.isRead) {
+    queryKey: ["vendorRecentOrders"],
+    queryFn: async () => {
       const response = await fetch(
-        `${API_URL}/api/vendor/notifications/${notification.id}/read`,
+        `${API_URL}/api/vendor/orders`,
         {
-          method: "PATCH",
           credentials: "include",
         }
       );
@@ -125,34 +56,114 @@ const handleNotificationClick = async (notification) => {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to mark notification as read");
+        throw new Error(data.message || "Failed to fetch recent orders");
       }
 
-      queryClient.invalidateQueries({
-        queryKey: ["vendorNotifications"],
-      });
-    }
+      return data.orders;
+    },
+  });
 
-    setShowNotifications(false);
+  const recentOrders = recentOrdersData?.slice(0, 4) || [];
 
-    if (notification.type === "NEW_ORDER") {
-      navigate("/vendor/orders");
+  const { data: storeStatusData } = useQuery({
+    queryKey: ["vendorStoreStatus"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${API_URL}/api/vendor/store-status`,
+        {
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch store status");
+      }
+
+      return data;
+    },
+  });
+
+  const storeStatus = storeStatusData?.storeStatus;
+
+  const { data: notificationsData } = useQuery({
+    queryKey: ["vendorNotifications"],
+    queryFn: async () => {
+      const response = await fetch(
+        `${API_URL}/api/vendor/notifications`,
+        {
+          credentials: "include",
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch notifications");
+      }
+
+      return data;
+    },
+  });
+
+  const notifications = notificationsData?.notifications || [];
+  const unreadCount = notificationsData?.unreadCount || 0;
+
+  const queryClient = useQueryClient();
+
+  const handleNotificationClick = async (notification) => {
+    try {
+      if (!notification.isRead) {
+        const response = await fetch(
+          `${API_URL}/api/vendor/notifications/${notification.id}/read`,
+          {
+            method: "PATCH",
+            credentials: "include",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to mark notification as read");
+        }
+
+        queryClient.setQueryData(["vendorNotifications"], (oldData) => {
+          if (!oldData) return oldData;
+
+          return {
+            ...oldData,
+            notifications: oldData.notifications.map((item) =>
+              item.id === notification.id
+                ? { ...item, isRead: true }
+                : item
+            ),
+            unreadCount: Math.max(0, oldData.unreadCount - 1),
+          };
+        });
+      }
+
+      setShowNotifications(false);
+
+      if (notification.type === "NEW_ORDER") {
+        navigate("/vendor/orders");
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
-  } catch (error) {
-    toast.error(error.message);
-  }
-};
+  };
 
   const stats = [
     {
       title: "Total Products",
-      value: statsData?.totalProducts??0,
+      value: statsData?.totalProducts ?? 0,
       icon: Package,
       description: "Products in your store",
     },
     {
       title: "Total Orders",
-      value: statsData?.totalOrders??0,
+      value: statsData?.totalOrders ?? 0,
       icon: ShoppingCart,
       description: "Orders received",
     },
@@ -170,46 +181,44 @@ const handleNotificationClick = async (notification) => {
     },
   ];
 
-  
-
   return (
     <div className="min-h-screen bg-slate-50">
 
       <Sidebar
-  isOpen={isSidebarOpen}
-  setIsOpen={setIsSidebarOpen}
-/>
+        isOpen={isSidebarOpen}
+        setIsOpen={setIsSidebarOpen}
+      />
 
       <main className="ml-0 min-h-screen lg:ml-64">
 
         <header className="flex min-h-20 flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-4 sm:px-6 lg:px-8">
 
-  <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
 
-    <button
-      type="button"
-      onClick={() => setIsSidebarOpen(true)}
-      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg  text-black shadow-md lg:hidden"
-      aria-label="Open sidebar"
-    >
-      <Menu size={22} />
-    </button>
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-black shadow-md lg:hidden"
+              aria-label="Open sidebar"
+            >
+              <Menu size={22} />
+            </button>
 
-    <div>
-      <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
-        Dashboard
-      </h1>
+            <div>
+              <h1 className="text-xl font-bold text-slate-900 sm:text-2xl">
+                Dashboard
+              </h1>
+            </div>
 
-      </div>
-
-            
           </div>
 
           <div className="flex items-center gap-3 sm:gap-6">
 
             <div className="relative">
 
-              <button type="button"onClick={() =>
+              <button
+                type="button"
+                onClick={() =>
                   setShowNotifications((prev) => !prev)
                 }
                 className="relative flex h-10 w-10 items-center justify-center rounded-xl text-slate-500 transition hover:bg-slate-100 hover:text-orange-500"
@@ -226,6 +235,7 @@ const handleNotificationClick = async (notification) => {
 
               {showNotifications && (
                 <div className="fixed right-4 top-20 z-50 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl sm:absolute sm:right-0 sm:top-12 sm:w-96">
+
                   <div className="border-b border-slate-200 px-4 py-3">
 
                     <h2 className="text-sm font-semibold text-slate-900">
@@ -245,11 +255,12 @@ const handleNotificationClick = async (notification) => {
 
                         <button
                           key={notification.id}
-                          type="button"onClick={() =>
+                          type="button"
+                          onClick={() =>
                             handleNotificationClick(notification)
                           }
                           className={`flex w-full items-start gap-3 border-b border-slate-100 px-4 py-3 text-left transition hover:bg-slate-50 ${
-                            notification.unread
+                            !notification.isRead
                               ? "bg-orange-50/40"
                               : "bg-white"
                           }`}
@@ -257,7 +268,7 @@ const handleNotificationClick = async (notification) => {
 
                           <span
                             className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${
-                             !notification.isRead
+                              !notification.isRead
                                 ? "bg-orange-500"
                                 : "bg-slate-300"
                             }`}
@@ -395,9 +406,7 @@ const handleNotificationClick = async (notification) => {
 
           </div>
 
-
           <div className="mt-7 grid grid-cols-1 gap-6 xl:grid-cols-3">
-
 
             <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
 
@@ -415,7 +424,8 @@ const handleNotificationClick = async (notification) => {
 
                 </div>
 
-                <Link to="/vendor/orders"
+                <Link
+                  to="/vendor/orders"
                   className="flex w-fit items-center gap-1.5 text-sm font-semibold text-orange-600 transition hover:text-orange-700"
                 >
                   View All Orders
@@ -474,10 +484,10 @@ const handleNotificationClick = async (notification) => {
                         </td>
 
                         <td className="max-w-xs px-6 py-4 text-sm text-slate-600">
-  <span className="line-clamp-2">
-    {order.products.map((product) => product.name).join(", ")}
-  </span>
-</td>
+                          <span className="line-clamp-2">
+                            {order.products.map((product) => product.name).join(", ")}
+                          </span>
+                        </td>
 
                         <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-700">
                           Rs. {order.total.toLocaleString()}
@@ -528,82 +538,81 @@ const handleNotificationClick = async (notification) => {
                 </div>
 
                 <div
-  className={`flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 ${
-    storeStatus === "ACTIVE"
-      ? "bg-green-50"
-      : "bg-slate-100"
-  }`}
->
-  <span
-    className={`h-2.5 w-2.5 rounded-full ${
-      storeStatus === "ACTIVE"
-        ? "bg-green-500"
-        : "bg-slate-400"
-    }`}
-  />
+                  className={`flex shrink-0 items-center gap-2 rounded-full px-3 py-1.5 ${
+                    storeStatus === "ACTIVE"
+                      ? "bg-green-50"
+                      : "bg-slate-100"
+                  }`}
+                >
+                  <span
+                    className={`h-2.5 w-2.5 rounded-full ${
+                      storeStatus === "ACTIVE"
+                        ? "bg-green-500"
+                        : "bg-slate-400"
+                    }`}
+                  />
 
-  <span
-    className={`text-xs font-semibold ${
-      storeStatus === "ACTIVE"
-        ? "text-green-600"
-        : "text-slate-500"
-    }`}
-  >
-    {storeStatus === "ACTIVE" ? "Active" : "Inactive"}
-  </span>
-</div>
+                  <span
+                    className={`text-xs font-semibold ${
+                      storeStatus === "ACTIVE"
+                        ? "text-green-600"
+                        : "text-slate-500"
+                    }`}
+                  >
+                    {storeStatus === "ACTIVE" ? "Active" : "Inactive"}
+                  </span>
+                </div>
 
               </div>
 
-
               <div
-  className={`mt-5 rounded-xl p-4 sm:p-5 ${
-    storeStatus === "ACTIVE"
-      ? "bg-green-50"
-      : "bg-slate-50"
-  }`}
->
-  <div className="flex items-center gap-3">
+                className={`mt-5 rounded-xl p-4 sm:p-5 ${
+                  storeStatus === "ACTIVE"
+                    ? "bg-green-50"
+                    : "bg-slate-50"
+                }`}
+              >
+                <div className="flex items-center gap-3">
 
-    {storeStatus === "ACTIVE" ? (
-      <CheckCircle
-        size={21}
-        className="shrink-0 text-green-500"
-      />
-    ) : (
-      <AlertTriangle
-        size={21}
-        className="shrink-0 text-slate-500"
-      />
-    )}
+                  {storeStatus === "ACTIVE" ? (
+                    <CheckCircle
+                      size={21}
+                      className="shrink-0 text-green-500"
+                    />
+                  ) : (
+                    <AlertTriangle
+                      size={21}
+                      className="shrink-0 text-slate-500"
+                    />
+                  )}
 
-    <p
-      className={`font-semibold ${
-        storeStatus === "ACTIVE"
-          ? "text-green-700"
-          : "text-slate-700"
-      }`}
-    >
-      {storeStatus === "ACTIVE"
-        ? "Store is Active"
-        : "Store is Inactive"}
-    </p>
+                  <p
+                    className={`font-semibold ${
+                      storeStatus === "ACTIVE"
+                        ? "text-green-700"
+                        : "text-slate-700"
+                    }`}
+                  >
+                    {storeStatus === "ACTIVE"
+                      ? "Store is Active"
+                      : "Store is Inactive"}
+                  </p>
 
-  </div>
+                </div>
 
-  <p
-    className={`mt-3 text-sm leading-6 ${
-      storeStatus === "ACTIVE"
-        ? "text-green-700/80"
-        : "text-slate-500"
-    }`}
-  >
-    {storeStatus === "ACTIVE"
-      ? "Customers can currently see your store and products and can place orders."
-      : "Customers cannot see your store or products while it is inactive."}
-  </p>
+                <p
+                  className={`mt-3 text-sm leading-6 ${
+                    storeStatus === "ACTIVE"
+                      ? "text-green-700/80"
+                      : "text-slate-500"
+                  }`}
+                >
+                  {storeStatus === "ACTIVE"
+                    ? "Customers can currently see your store and products and can place orders."
+                    : "Customers cannot see your store or products while it is inactive."}
+                </p>
 
-</div>
+              </div>
 
               <Link
                 to="/vendor/store"
