@@ -1,16 +1,139 @@
-# React + Vite
+# Zentro - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The frontend application for **Zentro**, a SaaS-based e-commerce and inventory management platform 
 
-Currently, two official plugins are available:
+Zentro provides a multi-vendor marketplace where customers can browse products and place orders, vendors can manage their stores and inventory, and administrators can manage the overall platform.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+##  Features
 
-## React Compiler
+### Customer
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Browse products without authentication
+- Search and filter products
+- View product details
+- Shopping cart
+- Multi-vendor checkout
+- Cash on Delivery checkout
+- Order confirmation
+- Responsive user interface
 
-## Expanding the Oxlint configuration
+### Vendor
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- Vendor registration
+- Vendor approval workflow
+- Vendor dashboard
+- Product management
+- Product image uploads
+- Inventory management
+- Stock and minimum-stock tracking
+- Order management
+- Approve or reject orders
+- Sales and order statistics
+- Vendor notifications
+
+### Admin
+
+- Admin dashboard
+- Vendor management
+- Pending vendor approvals
+- Approve or reject vendors
+- Vendor store management
+- Admin profile management
+- Dashboard statistics
+- Vendor approval notifications
+
+### Authentication
+
+- Login and registration
+- Role-based navigation
+- Protected routes
+- JWT authentication using HTTP-only cookies
+- Customer, vendor, and admin access control
+
+##  Technologies Used
+
+- React
+- Vite
+- Tailwind CSS
+- React Router
+- TanStack Query
+- React Toastify
+- Lucide React
+- JavaScript
+
+## 📁 Project Structure
+
+```text
+zentro-frontend/
+│
+├── public/
+├── src/
+│   ├── Components/
+│   ├── Pages/
+│   ├── context/
+│   ├── hooks/
+│   ├── services/
+│   └── ...
+│
+├── .gitignore
+├── package.json
+├── package-lock.json
+├── vite.config.js
+└── index.html
+```
+
+##  Backend
+
+The frontend communicates with the Zentro backend API.
+
+**Backend Repository:**  
+https://github.com/mahmad120133548-blip/zentro-backend
+
+##  Deployment
+
+The Zentro frontend is deployed separately from the backend and communicates with the production backend API.
+
+##  Local Development
+
+Clone the repository:
+
+```bash
+git clone https://github.com/mahmad120133548-blip/zentro-frontend.git
+```
+
+Navigate to the project:
+
+```bash
+cd zentro-frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available through the local Vite development server.
+
+##  Environment Variables
+
+The frontend uses environment variables for configuration such as the backend API URL.
+
+Create a `.env` file when required and configure the appropriate values.
+
+**Do not commit environment files containing sensitive information.**
+
+##  Author
+
+**Muhammad Ahmad**
+
+Bachelor's in Business and Information Technology  
+University of the Punjab
+
+Developed as a full-stack web development internship final project.
