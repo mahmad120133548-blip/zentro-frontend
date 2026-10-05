@@ -127,7 +127,6 @@ The frontend uses environment variables for configuration such as the backend AP
 
 Create a `.env` file when required and configure the appropriate values.
 
-**Do not commit environment files containing sensitive information.**
 
 ##  Author
 
@@ -135,5 +134,3 @@ Create a `.env` file when required and configure the appropriate values.
 
 Bachelor's in Business and Information Technology  
 University of the Punjab
-
-Developed as a full-stack web development internship final project.
